@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Learnly AI",
-    "slug": "learnly-ai",
-    "scheme": "learnlyai",
+    "slug": "logiq-ai",
+    "scheme": "logiqai",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -10,14 +10,14 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.learnlyai.app"
+      "bundleIdentifier": "com.logiqai.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#0D1321"
       },
-      "package": "com.learnlyai.app"
+      "package": "com.logiqai.app"
     },
     "web": {
       "bundler": "metro",

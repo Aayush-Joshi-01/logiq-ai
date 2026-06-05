@@ -58,7 +58,7 @@ export default function RootLayout() {
     return () => subscription.remove()
   }, [user])
 
-  // Handle Supabase OAuth deep link: learnlyai://auth/callback?token=...
+  // Handle Supabase OAuth deep link: logiqai://auth/callback?token=...
   useEffect(() => {
     const subscription = Linking.addEventListener('url', async ({ url }) => {
       if (url.includes('auth/callback')) {

@@ -24,6 +24,6 @@ export default async function handler(req: Request) {
   const { access_token, refresh_token } = await res.json()
 
   // Redirect to app deep link with tokens
-  const deepLink = `learnlyai://auth/callback?access_token=${access_token}&refresh_token=${refresh_token}`
+  const deepLink = `logiqai://auth/callback?access_token=${access_token}&refresh_token=${refresh_token}`
   return Response.redirect(deepLink)
 }

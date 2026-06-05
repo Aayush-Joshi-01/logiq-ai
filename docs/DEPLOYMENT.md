@@ -1,4 +1,4 @@
-# Learnly-AI — Deployment & Testing Guide
+# logiq-ai — Deployment & Testing Guide
 
 > Complete setup: Supabase → Upstash → Gemini → Stripe → Vercel backend → Expo frontend
 
@@ -39,7 +39,7 @@ Accounts you need (all have free tiers):
 ### 1.1 Create Project
 
 1. Go to [supabase.com](https://supabase.com) → **New project**
-2. Choose a name: `learnly-ai`
+2. Choose a name: `logiq-ai`
 3. Set a strong database password — **save it**, you'll need it
 4. Region: pick closest to your users
 5. Wait ~2 min for project to provision
@@ -93,7 +93,7 @@ service_role key:     eyJhbGc...  (NEVER expose — server-side only)
 2. **Site URL:** `https://your-vercel-domain.vercel.app`
 3. **Redirect URLs** → Add:
    ```
-   learnlyai://auth/callback
+   logiqai://auth/callback
    https://your-vercel-domain.vercel.app/**
    ```
 
@@ -102,7 +102,7 @@ service_role key:     eyJhbGc...  (NEVER expose — server-side only)
 ## Part 2 — Upstash Redis Setup
 
 1. Go to [console.upstash.com](https://console.upstash.com) → **Create Database**
-2. Name: `learnly-ai-redis`
+2. Name: `logiq-ai-redis`
 3. Type: **Regional** (cheaper) or **Global** (faster worldwide)
 4. Region: match your Vercel region
 5. Click **Create**
@@ -215,10 +215,10 @@ vercel login
 
 ```bash
 vercel link
-# ? Set up and deploy "learnly-ai/backend"? → Yes
+# ? Set up and deploy "logiq-ai/backend"? → Yes
 # ? Which scope? → your account
 # ? Link to existing project? → No
-# ? Project name → learnly-ai-backend
+# ? Project name → logiq-ai-backend
 # ? In which directory is your code located? → ./   (already in backend/)
 ```
 
@@ -274,13 +274,13 @@ Select **all environments** (Production, Preview, Development) for each.
 vercel deploy --prod
 ```
 
-Output will show your URL: `https://learnly-ai-backend-xxxx.vercel.app`
+Output will show your URL: `https://logiq-ai-backend-xxxx.vercel.app`
 
 ### 5.5 Verify Backend is Live
 
 ```bash
 # Should return list of roadmaps (or empty array)
-curl https://learnly-ai-backend-xxxx.vercel.app/api/roadmap
+curl https://logiq-ai-backend-xxxx.vercel.app/api/roadmap
 
 # Expected: {"roadmaps":[{"id":"...","title":"Web Development Fundamentals",...}]}
 ```
@@ -301,7 +301,7 @@ Edit `.env.local`:
 EXPO_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
 EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
 
-EXPO_PUBLIC_API_BASE_URL=https://learnly-ai-backend-xxxx.vercel.app
+EXPO_PUBLIC_API_BASE_URL=https://logiq-ai-backend-xxxx.vercel.app
 
 # URL of your subscribe page (from Part 4.4)
 EXPO_PUBLIC_STRIPE_CHECKOUT_URL=https://your-vercel-domain.vercel.app/subscribe
@@ -393,7 +393,7 @@ This creates `eas.json`. Edit it:
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://learnly-ai-backend-xxxx.vercel.app"
+        "EXPO_PUBLIC_API_BASE_URL": "https://logiq-ai-backend-xxxx.vercel.app"
       }
     },
     "preview": {
@@ -415,7 +415,7 @@ This creates `eas.json`. Edit it:
 # Add all your env vars as EAS secrets
 eas secret:create --scope project --name EXPO_PUBLIC_SUPABASE_URL --value "https://xxxx.supabase.co"
 eas secret:create --scope project --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value "eyJhbGc..."
-eas secret:create --scope project --name EXPO_PUBLIC_API_BASE_URL --value "https://learnly-ai-backend-xxxx.vercel.app"
+eas secret:create --scope project --name EXPO_PUBLIC_API_BASE_URL --value "https://logiq-ai-backend-xxxx.vercel.app"
 eas secret:create --scope project --name EXPO_PUBLIC_STRIPE_CHECKOUT_URL --value "https://..."
 ```
 
@@ -486,7 +486,7 @@ The easiest way is via the Supabase dashboard:
 
 ```bash
 # Set your values
-BASE=https://learnly-ai-backend-xxxx.vercel.app
+BASE=https://logiq-ai-backend-xxxx.vercel.app
 TOKEN=eyJhbGc...   # from step 9.1
 
 # ── Roadmap list (public, no auth) ────────────────────────

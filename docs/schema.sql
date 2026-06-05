@@ -1,5 +1,5 @@
 -- ============================================================
--- Learnly-AI — Supabase / Postgres Schema
+-- logiq-ai — Supabase / Postgres Schema
 -- Run order: schema.sql → rls-policies.sql → seed.sql
 -- ============================================================
 

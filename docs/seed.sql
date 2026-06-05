@@ -1,5 +1,5 @@
 -- ============================================================
--- Learnly-AI — Seed Data
+-- logiq-ai — Seed Data
 -- Run after schema.sql + rls-policies.sql
 -- 3 curated roadmaps with well-formed nodes + edges JSONB
 -- ============================================================

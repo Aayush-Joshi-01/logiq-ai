@@ -85,7 +85,7 @@ export default function OnboardingScreen() {
   async function handleOAuth(provider) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: 'learnlyai://auth/callback' },
+      options: { redirectTo: 'logiqai://auth/callback' },
     })
     if (error) setError(error.message)
   }

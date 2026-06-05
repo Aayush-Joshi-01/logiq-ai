@@ -1,5 +1,5 @@
 -- ============================================================
--- Learnly-AI — Row Level Security Policies
+-- logiq-ai — Row Level Security Policies
 -- Run after schema.sql
 -- ============================================================
 
