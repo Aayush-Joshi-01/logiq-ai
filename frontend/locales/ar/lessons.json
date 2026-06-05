@@ -1,0 +1,43 @@
+{
+  "labels": {
+    "coreConcept": "المفهوم الأساسي",
+    "visual": "مرئي",
+    "codeExample": "مثال على الكود",
+    "tryIt": "جرّب بنفسك",
+    "goDeeper": "تعمّق أكثر",
+    "nodeOf": "العقدة {{current}} من {{total}}",
+    "estimatedTime": "{{minutes}} دقيقة"
+  },
+  "actions": {
+    "copy": "نسخ",
+    "copied": "تم النسخ!",
+    "startLesson": "ابدأ الدرس",
+    "continueToQuiz": "انتقل إلى الاختبار",
+    "preview": "معاينة"
+  },
+  "feynman": {
+    "prompt": "اشرح {{concept}} كأنك تعلّم طفلًا عمره 12 عامًا",
+    "placeholder": "اكتب شرحك هنا...",
+    "submit": "أرسل الشرح",
+    "passed": "شرح ممتاز! ✓",
+    "failed": "استمر في التحسين — أنت قريب",
+    "gaps": "مفاهيم للمراجعة:",
+    "skipToQuiz": "انتقل إلى الاختبار على أي حال",
+    "retry": "حاول مجددًا"
+  },
+  "quiz": {
+    "title": "اختبار: {{nodeTitle}}",
+    "question": "السؤال {{current}} من {{total}}",
+    "submit": "إرسال",
+    "nextQuestion": "السؤال التالي ←",
+    "passed": "ناجح ✓",
+    "failed": "حاول مجددًا",
+    "score": "{{correct}} / {{total}} صحيح — {{percent}}%",
+    "reviewMistakes": "مراجعة الأخطاء",
+    "askAboutThis": "اسأل الذكاء الاصطناعي عن هذا السؤال"
+  },
+  "offline": {
+    "cachedLesson": "عرض درس محفوظ",
+    "notAvailable": "الدرس غير متاح بدون إنترنت. افتحه وأنت متصل لحفظه."
+  }
+}

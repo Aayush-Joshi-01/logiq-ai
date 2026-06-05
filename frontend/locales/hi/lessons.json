@@ -1,0 +1,43 @@
+{
+  "labels": {
+    "coreConcept": "मूल अवधारणा",
+    "visual": "विज़ुअल",
+    "codeExample": "कोड उदाहरण",
+    "tryIt": "कोशिश करें",
+    "goDeeper": "और गहराई से",
+    "nodeOf": "नोड {{current}} / {{total}}",
+    "estimatedTime": "{{minutes}} मिनट"
+  },
+  "actions": {
+    "copy": "कॉपी करें",
+    "copied": "कॉपी हो गया!",
+    "startLesson": "पाठ शुरू करें",
+    "continueToQuiz": "क्विज़ पर जाएं",
+    "preview": "पूर्वावलोकन"
+  },
+  "feynman": {
+    "prompt": "{{concept}} को ऐसे समझाएं जैसे 12 साल के बच्चे को सिखा रहे हों",
+    "placeholder": "यहाँ अपनी व्याख्या लिखें...",
+    "submit": "व्याख्या सबमिट करें",
+    "passed": "बेहतरीन व्याख्या! ✓",
+    "failed": "और बेहतर करें — लगभग सही है",
+    "gaps": "समीक्षा के लिए विषय:",
+    "skipToQuiz": "फिर भी क्विज़ पर जाएं",
+    "retry": "फिर कोशिश करें"
+  },
+  "quiz": {
+    "title": "क्विज़: {{nodeTitle}}",
+    "question": "प्रश्न {{current}} / {{total}}",
+    "submit": "सबमिट करें",
+    "nextQuestion": "अगला प्रश्न →",
+    "passed": "उत्तीर्ण ✓",
+    "failed": "फिर कोशिश करें",
+    "score": "{{correct}} / {{total}} सही — {{percent}}%",
+    "reviewMistakes": "गलतियाँ देखें",
+    "askAboutThis": "इस प्रश्न के बारे में AI से पूछें"
+  },
+  "offline": {
+    "cachedLesson": "कैश्ड पाठ देख रहे हैं",
+    "notAvailable": "पाठ ऑफलाइन उपलब्ध नहीं है। कनेक्ट होने पर खोलें।"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "labels": {
+    "coreConcept": "CORE CONCEPT",
+    "visual": "VISUAL",
+    "codeExample": "CODE EXAMPLE",
+    "tryIt": "TRY IT",
+    "goDeeper": "Go deeper",
+    "nodeOf": "Node {{current}} of {{total}}",
+    "estimatedTime": "{{minutes}} min"
+  },
+  "actions": {
+    "copy": "Copy",
+    "copied": "Copied!",
+    "startLesson": "Start Lesson",
+    "continueToQuiz": "Continue to Quiz",
+    "preview": "Preview"
+  },
+  "feynman": {
+    "prompt": "Explain {{concept}} as if teaching a 12-year-old",
+    "placeholder": "Type your explanation here...",
+    "submit": "Submit explanation",
+    "passed": "Great explanation! ✓",
+    "failed": "Keep refining — almost there",
+    "gaps": "Concepts to review:",
+    "skipToQuiz": "Skip to Quiz anyway",
+    "retry": "Try again"
+  },
+  "quiz": {
+    "title": "Quiz: {{nodeTitle}}",
+    "question": "Q{{current}} of {{total}}",
+    "submit": "Submit",
+    "nextQuestion": "Next Question →",
+    "passed": "Passed ✓",
+    "failed": "Try Again",
+    "score": "{{correct}} / {{total}} Correct — {{percent}}%",
+    "reviewMistakes": "Review Mistakes",
+    "askAboutThis": "Ask AI about this question"
+  },
+  "offline": {
+    "cachedLesson": "Viewing cached lesson",
+    "notAvailable": "Lesson not available offline. Open while connected to cache it."
+  }
+}

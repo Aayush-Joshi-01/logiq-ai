@@ -1,0 +1,47 @@
+{
+  "app": {
+    "name": "Learnly AI"
+  },
+  "nav": {
+    "home": "होम",
+    "explore": "खोजें",
+    "myLearning": "मेरी पढ़ाई",
+    "profile": "प्रोफ़ाइल"
+  },
+  "greeting": {
+    "morning": "सुप्रभात, {{name}}",
+    "afternoon": "नमस्ते, {{name}}",
+    "evening": "शुभ संध्या, {{name}}"
+  },
+  "actions": {
+    "continue": "जारी रखें",
+    "start": "शुरू करें",
+    "next": "अगला",
+    "back": "वापस",
+    "skip": "छोड़ें",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "confirm": "पुष्टि करें",
+    "delete": "हटाएं",
+    "signOut": "साइन आउट",
+    "upgrade": "Pro में अपग्रेड करें",
+    "retry": "पुनः प्रयास करें",
+    "refresh": "रिफ्रेश करें",
+    "askAI": "AI से पूछें 💬",
+    "understood": "मैं समझ गया ✓"
+  },
+  "status": {
+    "loading": "लोड हो रहा है...",
+    "offline": "आप ऑफलाइन हैं",
+    "offlineContent": "कैश्ड सामग्री दिखा रहे हैं",
+    "noResults": "कोई परिणाम नहीं मिला",
+    "empty": "अभी यहाँ कुछ नहीं है"
+  },
+  "subscription": {
+    "free": "मुफ़्त",
+    "pro": "Pro",
+    "callsRemaining": "आज {{count}} AI बातचीत बची है",
+    "upgradePrompt": "असीमित AI के लिए अपग्रेड करें",
+    "manageSub": "{{url}} पर सब्सक्रिप्शन प्रबंधित करें"
+  }
+}

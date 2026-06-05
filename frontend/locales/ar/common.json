@@ -1,0 +1,47 @@
+{
+  "app": {
+    "name": "Learnly AI"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "explore": "استكشاف",
+    "myLearning": "تعلّمي",
+    "profile": "الملف الشخصي"
+  },
+  "greeting": {
+    "morning": "صباح الخير، {{name}}",
+    "afternoon": "مرحباً، {{name}}",
+    "evening": "مساء الخير، {{name}}"
+  },
+  "actions": {
+    "continue": "متابعة",
+    "start": "ابدأ",
+    "next": "التالي",
+    "back": "رجوع",
+    "skip": "تخطي",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "delete": "حذف",
+    "signOut": "تسجيل الخروج",
+    "upgrade": "الترقية إلى Pro",
+    "retry": "حاول مجددًا",
+    "refresh": "اسحب للتحديث",
+    "askAI": "اسأل الذكاء الاصطناعي 💬",
+    "understood": "فهمت هذا ✓"
+  },
+  "status": {
+    "loading": "جارٍ التحميل...",
+    "offline": "أنت غير متصل بالإنترنت",
+    "offlineContent": "عرض المحتوى المحفوظ",
+    "noResults": "لم يتم العثور على نتائج",
+    "empty": "لا يوجد شيء هنا بعد"
+  },
+  "subscription": {
+    "free": "مجاني",
+    "pro": "Pro",
+    "callsRemaining": "{{count}} محادثة ذكاء اصطناعي متبقية اليوم",
+    "upgradePrompt": "الترقية للحصول على ذكاء اصطناعي غير محدود",
+    "manageSub": "إدارة الاشتراك على {{url}}"
+  }
+}

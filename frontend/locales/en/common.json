@@ -1,0 +1,48 @@
+{
+  "app": {
+    "name": "Learnly AI"
+  },
+  "nav": {
+    "home": "Home",
+    "explore": "Explore",
+    "myLearning": "My Learning",
+    "profile": "Profile"
+  },
+  "greeting": {
+    "morning": "Good morning, {{name}}",
+    "afternoon": "Good afternoon, {{name}}",
+    "evening": "Good evening, {{name}}"
+  },
+  "actions": {
+    "continue": "Continue",
+    "start": "Start",
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "signOut": "Sign out",
+    "upgrade": "Upgrade to Pro",
+    "retry": "Try Again",
+    "refresh": "Pull to refresh",
+    "askAI": "Ask AI 💬",
+    "understood": "I understand this ✓"
+  },
+  "status": {
+    "loading": "Loading...",
+    "offline": "You're offline",
+    "offlineContent": "Showing cached content",
+    "noResults": "No results found",
+    "empty": "Nothing here yet"
+  },
+  "subscription": {
+    "free": "Free",
+    "pro": "Pro",
+    "callsRemaining": "{{count}} AI conversations remaining today",
+    "callsRemaining_one": "{{count}} AI conversation remaining today",
+    "upgradePrompt": "Upgrade for unlimited AI",
+    "manageSub": "Manage subscription at {{url}}"
+  }
+}

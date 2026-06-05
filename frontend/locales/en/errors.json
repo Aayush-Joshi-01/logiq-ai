@@ -1,0 +1,13 @@
+{
+  "network": "Something went wrong. Pull to refresh.",
+  "offline": "You're offline. Showing cached content.",
+  "unauthorized": "Session expired. Please sign in again.",
+  "rateLimit": "Daily AI limit reached. Upgrade to Pro for unlimited access.",
+  "notFound": "Page not found.",
+  "serverError": "Server error. Please try again later.",
+  "byokInvalid": "Invalid API key. Please check and try again.",
+  "quizLoadFailed": "Couldn't load quiz. Please try again.",
+  "lessonLoadFailed": "Couldn't load lesson. Showing cached version.",
+  "authFailed": "Sign in failed. Please try again.",
+  "subscriptionFailed": "Couldn't open checkout. Please try again."
+}
