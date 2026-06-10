@@ -10,6 +10,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useTheme } from '../../hooks/useTheme'
 import { useRoadmapStore } from '../../store/roadmapStore'
 import { useLearningStore } from '../../store/learningStore'
+import { useSettingsStore } from '../../store/settingsStore'
 import { apiPost } from '../../lib/api'
 import { preCacheNode } from '../../lib/offline'
 import { TutorChat } from '../../components/AITutor/TutorChat'
@@ -118,6 +119,8 @@ export default function LessonScreen() {
 
   const { currentRoadmap } = useRoadmapStore()
   const { currentRoadmapId } = useLearningStore()
+  const { language } = useSettingsStore()
+  const languageName = { en: 'English', hi: 'Hindi', ar: 'Arabic' }[language] || 'English'
 
   const node = currentRoadmap?.nodes?.find((n) => n.id === nodeId)
 
@@ -140,6 +143,7 @@ export default function LessonScreen() {
         roadmapId: currentRoadmapId,
         nodeTitle: node?.title,
         nodeType:  node?.type,
+        language:  languageName,
       })
       // API returns { content: { coreConcept, codeExample, tryIt, goDeeper }, cached }
       const c = data.content || data
