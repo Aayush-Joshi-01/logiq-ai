@@ -63,6 +63,14 @@ export async function apiPatch(path, body) {
   return response.json()
 }
 
+export async function apiDelete(path) {
+  const headers = await getAuthHeaders()
+  const response = await fetch(`${BASE_URL}${path}`, { method: 'DELETE', headers })
+  if (response.status === 204) return null
+  if (!response.ok) throw new APIError(response.status, await response.text())
+  return response.json()
+}
+
 // Returns the raw Response for streaming endpoints
 export async function apiStream(path, body, byokKey = null) {
   const headers = await getAuthHeaders(byokKey)

@@ -1,11 +1,8 @@
-import * as Linking from 'expo-linking'
 import { supabase } from './supabase'
 
-const CHECKOUT_URL = process.env.EXPO_PUBLIC_STRIPE_CHECKOUT_URL
-
-export async function openUpgradeFlow(userId, plan = 'monthly') {
-  const url = `${CHECKOUT_URL}?userId=${encodeURIComponent(userId)}&plan=${plan}`
-  await Linking.openURL(url)
+// Payments disabled for beta. openUpgradeFlow is a no-op stub.
+export async function openUpgradeFlow(_userId, _plan = 'monthly') {
+  // Razorpay integration post-beta
 }
 
 export async function refreshSubscriptionStatus(userId) {

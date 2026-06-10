@@ -18,6 +18,11 @@ export const ROUTES = {
   // Subscription
   SUBSCRIPTION: '/subscription',
 
+  // Courses (free-form topic learning)
+  COURSE_NEW:   '/course/new',
+  COURSE:       (id) => `/course/${id}`,
+  SECTION:      (courseId, sectionId) => `/course/${courseId}/section/${sectionId}`,
+
   // V2
   GENERATE:     '/generate',
   COMMUNITY:    (nodeId) => `/community/${nodeId}`,

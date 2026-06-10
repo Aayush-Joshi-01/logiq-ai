@@ -10,7 +10,7 @@ export default async function handler(req: Request) {
   if (req.method === 'GET') {
     const { data: profile } = await supabase
       .from('profiles')
-      .select('id, display_name, language, subscription_tier, preferred_style, created_at')
+      .select('id, display_name, language, subscription_tier, preferred_style, work_field, years_experience, learning_summary, skills, created_at')
       .eq('id', user.id)
       .single()
 
@@ -24,7 +24,7 @@ export default async function handler(req: Request) {
     const BLOCKED = ['subscription_tier', 'stripe_customer_id', 'stripe_subscription_id', 'inferred_level']
     const sanitized: Record<string, any> = {}
 
-    for (const key of ['display_name', 'language', 'preferred_style']) {
+    for (const key of ['display_name', 'language', 'preferred_style', 'work_field', 'years_experience', 'learning_summary', 'skills']) {
       if (key in body && !BLOCKED.includes(key)) {
         sanitized[key] = body[key]
       }
@@ -44,6 +44,14 @@ export default async function handler(req: Request) {
     }
 
     return Response.json({ profile: data })
+  }
+
+  if (req.method === 'DELETE') {
+    const { error } = await supabase.auth.admin.deleteUser(user.id)
+    if (error) {
+      return new Response(JSON.stringify({ error: error.message }), { status: 500 })
+    }
+    return new Response(null, { status: 204 })
   }
 
   return new Response('Method not allowed', { status: 405 })

@@ -1,16 +1,198 @@
+// ─── User context injected into every generation call ────────────────────────
+export interface UserContext {
+  workField?: string         // e.g. "software engineering", "finance", "management"
+  yearsExperience?: number   // 0 = student/beginner, 10+ = senior
+  learningSummary?: string   // 100-word bio the user wrote about themselves
+  skills?: string[]          // e.g. ["Python", "SQL", "leadership"]
+  language: string           // content language code
+}
+
+function inferLevel(years?: number): string {
+  if (!years || years === 0) return 'beginner'
+  if (years <= 2)  return 'junior'
+  if (years <= 5)  return 'mid-level'
+  if (years <= 10) return 'senior'
+  return 'expert'
+}
+
+function buildUserContextBlock(ctx: UserContext): string {
+  const level = inferLevel(ctx.yearsExperience)
+  const parts: string[] = [
+    `Experience level: ${level}${ctx.yearsExperience ? ` (${ctx.yearsExperience} years)` : ''}`,
+  ]
+  if (ctx.workField)        parts.push(`Field: ${ctx.workField}`)
+  if (ctx.skills?.length)   parts.push(`Existing skills: ${ctx.skills.join(', ')}`)
+  if (ctx.learningSummary)  parts.push(`About learner: ${ctx.learningSummary}`)
+  return parts.join('\n')
+}
+
+// ─── Course outline (stage 1 — headings only, ~200 tokens) ───────────────────
+export function buildOutlinePrompt({
+  topic,
+  description,
+  ctx,
+}: {
+  topic: string
+  description?: string
+  ctx: UserContext
+}) {
+  const level = inferLevel(ctx.yearsExperience)
+  return `Generate a learning outline for the topic: "${topic}"${description ? `\nContext: ${description}` : ''}.
+
+LEARNER PROFILE:
+${buildUserContextBlock(ctx)}
+
+Rules:
+- Generate 4-7 sections appropriate for a ${level}-level learner
+- Skip sections covering skills the learner already has
+- Each section = one focused concept, 5-minute read
+- Do NOT generate content yet — headings and 1-line summaries only
+- Respond in ${ctx.language}
+
+Return ONLY valid JSON:
+{
+  "title": "string (refined topic title in ${ctx.language})",
+  "sections": [
+    { "title": "string", "summary": "string (1 sentence)", "position": number }
+  ]
+}`
+}
+
+// ─── Section content (stage 2 — one section at a time, ~500 tokens) ──────────
+export function buildSectionContentPrompt({
+  courseTitle,
+  sectionTitle,
+  sectionSummary,
+  ctx,
+}: {
+  courseTitle: string
+  sectionTitle: string
+  sectionSummary?: string
+  ctx: UserContext
+}) {
+  const level = inferLevel(ctx.yearsExperience)
+  return `Generate lesson content for one section of the course "${courseTitle}".
+Section: "${sectionTitle}"${sectionSummary ? `\nSection goal: ${sectionSummary}` : ''}
+
+LEARNER PROFILE:
+${buildUserContextBlock(ctx)}
+
+Rules:
+- Target a ${level}-level learner in ${ctx.workField || 'any field'}
+- 5-minute read maximum (~400 words for overview + keyPoints combined)
+- Use examples relevant to ${ctx.workField || 'everyday life'}
+- Practical over theoretical — what can they DO with this knowledge?
+- Respond entirely in ${ctx.language}
+
+Return ONLY valid JSON:
+{
+  "overview": "string (2-3 sentences introducing the concept)",
+  "keyPoints": [
+    { "point": "string", "detail": "string (1 sentence elaboration)" }
+  ],
+  "example": { "scenario": "string", "explanation": "string" },
+  "takeaway": "string (1-sentence key insight to remember)",
+  "hasCode": boolean
+}`
+}
+
+// ─── Section quiz (lazy — generated when section is opened or completed) ─────
+export function buildSectionQuizPrompt({
+  courseTitle,
+  sectionTitle,
+  sectionContent,
+  ctx,
+  count = 4,
+}: {
+  courseTitle: string
+  sectionTitle: string
+  sectionContent?: string
+  ctx: UserContext
+  count?: number
+}) {
+  return `Generate ${count} quiz questions for the section "${sectionTitle}" from the course "${courseTitle}".
+
+LEARNER PROFILE:
+${buildUserContextBlock(ctx)}
+
+${sectionContent ? `Section content summary:\n${sectionContent}\n` : ''}
+Rules:
+- All text in ${ctx.language}
+- Last question MUST be type "feynman" (open-text, no options, no correct field)
+- MCQ: exactly 4 options per question
+- Test practical understanding, not memorization
+
+Return ONLY valid JSON:
+{
+  "questions": [
+    {
+      "type": "mcq",
+      "question": "string",
+      "options": ["string","string","string","string"],
+      "correct": "string",
+      "explanation": "string"
+    }
+  ]
+}`
+}
+
+// ─── AI Roadmap generation (structured, graph-ready) ─────────────────────────
+export function buildRoadmapGenerationPrompt({
+  topic,
+  ctx,
+}: {
+  topic: string
+  ctx: UserContext
+}) {
+  const level = inferLevel(ctx.yearsExperience)
+  return `Generate a learning roadmap for: "${topic}"
+
+LEARNER PROFILE:
+${buildUserContextBlock(ctx)}
+
+Rules:
+- 8-15 nodes for a ${level}-level learner
+- Skip fundamentals the learner already knows (check their existing skills)
+- Nodes arranged in logical learning order with prerequisites
+- Each node = 1 focused concept, ~30-60 min to complete
+- Respond titles/descriptions in ${ctx.language}
+
+Return ONLY valid JSON:
+{
+  "title": "string",
+  "description": "string",
+  "nodes": [
+    {
+      "id": "string (slug, e.g. 'intro-to-x')",
+      "title": "string",
+      "type": "concept|project|quiz|milestone",
+      "estimated_minutes": number,
+      "week": number,
+      "description": "string (1 sentence)"
+    }
+  ],
+  "edges": [
+    { "source": "string (node id)", "target": "string (node id)" }
+  ]
+}`
+}
+
 export function buildTutorPrompt({
   nodeId,
   roadmapContext,
   userLanguage,
   userLevel,
   sessionHistory,
+  userCtx,
 }: {
   nodeId?: string
   roadmapContext?: any
   userLanguage: string
   userLevel: string
   sessionHistory?: string
+  userCtx?: Partial<UserContext>
 }) {
+  const ctxBlock = userCtx ? `\nLEARNER BACKGROUND:\n${buildUserContextBlock({ ...userCtx, language: userLanguage })}` : ''
   return `You are an expert learning tutor. Help the user understand concepts clearly.
 
 RULES:
@@ -20,7 +202,7 @@ RULES:
 - Use culturally relevant examples for ${userLanguage} speakers when possible
 - If the user says "I don't understand" twice in a row, switch to a simpler analogy
 - Never give exercise answers directly — guide with hints only
-
+${ctxBlock}
 CURRENT CONTEXT:
 - Roadmap: ${roadmapContext?.roadmapTitle || 'General'}
 - Current node: ${roadmapContext?.nodeTitle || 'General'} (${roadmapContext?.nodeType || 'concept'})

@@ -130,3 +130,21 @@ export function removeFromSyncQueue(id) {
   const database = getDB()
   database.runSync('DELETE FROM sync_queue WHERE id = ?', [id])
 }
+
+// Fire-and-forget: fetch lesson explanation + quiz for a node and write to SQLite.
+// Called on lesson open so content is available offline next visit.
+export async function preCacheNode(nodeId, language = 'en') {
+  const { apiPost } = await import('./api')
+  try {
+    await Promise.all([
+      apiPost('/api/ai/explain', { nodeId, language }).then((data) => {
+        if (data) cacheAIExplanation(nodeId, language, JSON.stringify(data))
+      }),
+      apiPost('/api/ai/quiz', { nodeId, language }).then((data) => {
+        if (data) cacheQuiz(nodeId, data)
+      }),
+    ])
+  } catch {
+    // Best-effort — silently ignore failures
+  }
+}

@@ -6,6 +6,15 @@
     "api/ai/*.ts": {
       "maxDuration": 30
     },
+    "api/ai/quiz/section.ts": {
+      "maxDuration": 30
+    },
+    "api/courses/index.ts": {
+      "maxDuration": 15
+    },
+    "api/courses/[id].ts": {
+      "maxDuration": 15
+    },
     "api/subscription/webhook.ts": {
       "maxDuration": 10
     }

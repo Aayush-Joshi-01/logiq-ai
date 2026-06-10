@@ -1,11 +1,10 @@
 import { useSettingsStore } from '../store/settingsStore'
-import { useLearningStore } from '../store/learningStore'
 import { useAuthStore } from '../store/authStore'
 import { getBYOKKey } from '../lib/secureStorage'
 import { apiStream } from '../lib/api'
 
 // Do NOT use EventSource — React Native / Hermes does not have it.
-// Use fetch + ReadableStream reader instead.
+// Uses fetch + ReadableStream reader.
 export function useAIStream() {
   const { aiProvider } = useSettingsStore()
 
@@ -25,7 +24,9 @@ export function useAIStream() {
       return
     }
 
+    // Rate limit header already consumed by apiStream → settingsStore updated there
     if (response.status === 429) {
+      useSettingsStore.getState().setCallsRemaining(0)
       onDone?.({ rateLimited: true })
       return
     }
@@ -35,29 +36,33 @@ export function useAIStream() {
       return
     }
 
-    const reader = response.body.getReader()
+    const reader  = response.body.getReader()
     const decoder = new TextDecoder()
+    let   buffer  = ''
 
     try {
       while (true) {
         const { done, value } = await reader.read()
         if (done) break
 
-        const chunk = decoder.decode(value)
-        const lines = chunk.split('\n').filter((l) => l.startsWith('data: '))
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        // Keep the last potentially-incomplete line in the buffer
+        buffer = lines.pop() ?? ''
 
         for (const line of lines) {
-          const data = line.replace('data: ', '').trim()
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6).trim()
           if (data === '[DONE]') {
             onDone?.({ rateLimited: false })
             return
           }
           try {
             const parsed = JSON.parse(data)
-            const token = parsed.choices?.[0]?.delta?.content || ''
+            const token  = parsed.choices?.[0]?.delta?.content || ''
             if (token) onToken?.(token)
           } catch {
-            // Malformed chunk — skip
+            // Incomplete JSON chunk — skip
           }
         }
       }
