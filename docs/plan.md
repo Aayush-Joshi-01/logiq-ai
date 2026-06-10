@@ -10,8 +10,8 @@ Learnly-AI is an AI-powered mobile learning platform. The repo contains two deta
 - i18n: EN + HI + AR (RTL from day 1)
 
 **Platform AI model policy:**
-- Free users: platform Gemini API key (free quota, `gemini-2.0-flash`)
-- Pro users: platform Gemini API key (paid quota, `gemini-2.0-flash` with higher limits or `gemini-2.0-pro`)
+- Free users: platform Gemini API key (free quota, `gemini-flash-lite-latest`)
+- Pro users: platform Gemini API key (paid quota, `gemini-flash-lite-latest` with higher limits or `gemini-2.0-pro`)
 - The underlying model is **never disclosed to users** — it shows only as "AI Tutor" in the UI
 - BYOK users: supply their own key for any provider (OpenAI, Claude, Gemini, Azure) — their key, their cost, their model choice
 - OpenAI, Claude, Azure are NOT used for the platform's own AI service — only available as BYOK options

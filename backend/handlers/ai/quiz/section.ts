@@ -94,7 +94,7 @@ export default async function handler(req: Request) {
   const tier   = await getSubscriptionTier(user.id)
   const apiKey = tier === 'pro' ? process.env.GEMINI_PAID_API_KEY! : process.env.GEMINI_FREE_API_KEY!
 
-  const { text, promptTokens, completionTokens, totalTokens } = await callGeminiJSONWithUsage(apiKey, prompt, 'gemini-2.0-flash', 600)
+  const { text, promptTokens, completionTokens, totalTokens } = await callGeminiJSONWithUsage(apiKey, prompt, 'gemini-flash-lite-latest', 600)
   const { questions } = JSON.parse(text)
 
   await Promise.all([

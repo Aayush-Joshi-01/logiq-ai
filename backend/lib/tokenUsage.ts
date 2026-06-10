@@ -11,7 +11,7 @@ export interface TokenUsagePayload {
 
 // Server-authoritative token tracking. Never trust client-reported counts.
 export async function trackTokenUsage(payload: TokenUsagePayload): Promise<void> {
-  const { userId, model = 'gemini-2.0-flash', promptTokens, completionTokens, totalTokens, endpoint } = payload
+  const { userId, model = 'gemini-flash-lite-latest', promptTokens, completionTokens, totalTokens, endpoint } = payload
   try {
     await supabase.from('token_usage').insert({
       user_id:           userId,

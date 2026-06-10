@@ -616,7 +616,7 @@ Work through these on device (or simulator):
 | Gemini returns empty response | API key quota exceeded | Check quota at aistudio.google.com |
 | Rate limit not resetting | Redis key stuck | `redis.del('rl:free:<userId>')` in Redis console |
 | CORS error from app | Missing origin in headers | Check `vercel.json` CORS config |
-| Edge function timeout | Response too slow | 800 max_tokens should complete in <8s on `gemini-2.0-flash` |
+| Edge function timeout | Response too slow | 800 max_tokens should complete in <8s on `gemini-flash-lite-latest` |
 
 ### Frontend
 

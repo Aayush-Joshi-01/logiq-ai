@@ -20,7 +20,7 @@ export interface GeminiJSONResult {
 export async function callGeminiJSONWithUsage(
   apiKey: string,
   prompt: string,
-  model = 'gemini-2.0-flash',
+  model = 'gemini-flash-lite-latest',
   maxOutputTokens = 1500,
 ): Promise<GeminiJSONResult> {
   const ai = new GoogleGenAI({ apiKey })
@@ -49,7 +49,7 @@ export async function callGeminiJSONWithUsage(
 export async function callGeminiJSON(
   apiKey: string,
   prompt: string,
-  model = 'gemini-2.0-flash',
+  model = 'gemini-flash-lite-latest',
 ): Promise<string> {
   const { text } = await callGeminiJSONWithUsage(apiKey, prompt, model)
   return text
@@ -62,7 +62,7 @@ export async function callGeminiJSON(
 export async function streamGemini(
   apiKey: string,
   messages: any[],
-  model = 'gemini-2.0-flash',
+  model = 'gemini-flash-lite-latest',
 ): Promise<ReadableStream<Uint8Array>> {
   const systemInstruction = messages.find((m) => m.role === 'system')?.content
   const contents = messages

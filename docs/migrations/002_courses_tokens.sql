@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS token_usage (
   id                uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id           uuid        NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   date              date        NOT NULL DEFAULT CURRENT_DATE,
-  model             text        NOT NULL DEFAULT 'gemini-2.0-flash',
+  model             text        NOT NULL DEFAULT 'gemini-flash-lite-latest',
   prompt_tokens     integer     NOT NULL DEFAULT 0,
   completion_tokens integer     NOT NULL DEFAULT 0,
   total_tokens      integer     NOT NULL DEFAULT 0,

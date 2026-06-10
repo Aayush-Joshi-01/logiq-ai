@@ -82,14 +82,6 @@ export default function OnboardingScreen() {
     router.replace('/(tabs)')
   }
 
-  async function handleOAuth(provider) {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: { redirectTo: 'logiqai://auth/callback' },
-    })
-    if (error) setError(error.message)
-  }
-
   async function saveOnboardingData() {
     try {
       await apiPatch('/api/auth/user', {
@@ -309,40 +301,6 @@ export default function OnboardingScreen() {
             {error && (
               <Text style={{ color: COLORS.error, fontSize: 14, marginBottom: 16 }}>{error}</Text>
             )}
-
-            <TouchableOpacity
-              onPress={() => handleOAuth('google')}
-              style={{
-                padding: 16,
-                borderRadius: 12,
-                backgroundColor: theme.surface,
-                borderWidth: 1,
-                borderColor: theme.border,
-                alignItems: 'center',
-                marginBottom: 12,
-              }}
-            >
-              <Text style={{ color: theme.textPrimary, fontSize: 16, fontWeight: '600' }}>
-                {t('step5.googleCTA')}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => handleOAuth('apple')}
-              style={{
-                padding: 16,
-                borderRadius: 12,
-                backgroundColor: theme.surface,
-                borderWidth: 1,
-                borderColor: theme.border,
-                alignItems: 'center',
-                marginBottom: 24,
-              }}
-            >
-              <Text style={{ color: theme.textPrimary, fontSize: 16, fontWeight: '600' }}>
-                {t('step5.appleCTA')}
-              </Text>
-            </TouchableOpacity>
 
             <View style={{ marginBottom: 16 }}>
               <TextInput

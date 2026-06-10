@@ -11,7 +11,7 @@ Estimated time: **~40 minutes** the first time.
 | Service | What for | Free tier |
 |---------|----------|-----------|
 | Supabase | Database, Auth, Row-level security | 500 MB DB, 50K MAU |
-| Vercel | Backend API (Node + Edge functions) | 100 GB-hrs compute/mo |
+| Railway | Backend API (Hono + Bun server) | 500 hours/month (Starter) |
 | Upstash Redis | Rate limiting per user | 10K req/day |
 | Google AI Studio | Gemini 2.0 Flash (platform AI) | 15 RPM / 1M tokens/day |
 | Expo Go (phone app) | Run the React Native frontend | Free |
@@ -23,7 +23,6 @@ Estimated time: **~40 minutes** the first time.
 ```bash
 node --version    # needs 20+
 git --version
-npm i -g vercel   # Vercel CLI
 ```
 
 Install **Expo Go** on your phone:
@@ -75,18 +74,6 @@ If you get a "relation already exists" error on any statement, that's fine — j
 
 **Email auth** (already on by default — nothing to do).
 
-**Google OAuth** (optional but recommended):
-1. Supabase Dashboard → **Authentication** → **Providers** → **Google** → Enable
-2. Go to [console.cloud.google.com](https://console.cloud.google.com)
-   - APIs & Services → Credentials → **Create OAuth 2.0 Client ID**
-   - Application type: **Web application**
-   - Authorised redirect URI:
-     ```
-     https://<your-supabase-project-ref>.supabase.co/auth/v1/callback
-     ```
-     (The project ref is in your Supabase URL, e.g. `abcdefgh`)
-3. Paste Client ID + Secret into the Supabase Google provider settings → Save
-
 ### 1.4 Copy your credentials
 
 Supabase Dashboard → **Settings** → **API**:
@@ -123,35 +110,62 @@ Supabase Dashboard → **Settings** → **API**:
 
 ---
 
-## Step 4 — Deploy Backend to Vercel
+## Step 4 — Deploy Backend to Railway
 
-### 4.1 Initial deploy
+The backend runs as a single **Hono + Bun** server on Railway (free tier, no function limits).
+
+### 4.1 Install Bun
+
+```bash
+# macOS / Linux
+curl -fsSL https://bun.sh/install | bash
+
+# Windows (PowerShell)
+powershell -c "irm bun.sh/install.ps1 | iex"
+```
+
+Verify: `bun --version`
+
+### 4.2 Generate the Bun lockfile
 
 ```bash
 cd backend
-npm install
-vercel login        # opens browser
-vercel              # first deploy — follow the prompts
+bun install       # creates bun.lockb — Railway needs this to detect Bun
 ```
 
-Answer the prompts:
+### 4.3 Test locally before deploying
 
-```
-Set up and deploy? → Y
-Which scope? → your personal account (or team)
-Link to existing project? → N
-Project name → logiq-ai-backend
-In which directory is your code? → ./   (you're already in backend/)
-Override settings? → N
+```bash
+bun run index.ts
+# → Server running on http://localhost:3000
 ```
 
-Vercel will do a first build. It will fail or have no env vars yet — that's fine.
+In another terminal:
+```bash
+curl http://localhost:3000/health
+# → {"ok":true}
+```
 
-### 4.2 Add environment variables
+You'll need the env vars set locally for full API testing:
+```bash
+# PowerShell
+$env:SUPABASE_URL="https://xxxx.supabase.co"
+$env:SUPABASE_SERVICE_ROLE_KEY="eyJ..."
+# ... etc, then run bun run index.ts
+```
 
-Vercel Dashboard → select `logiq-ai-backend` → **Settings** → **Environment Variables**
+### 4.4 Create Railway project
 
-Add every variable below, set **Environment** to **Production, Preview, Development** for all:
+1. Go to [railway.app](https://railway.app) → **New Project**
+2. Select **Deploy from GitHub repo**
+3. Authorise Railway to access your GitHub account
+4. Select your `logiq-ai` repo
+5. Railway asks which directory — set **Root Directory** to `backend`
+6. It will start a first deploy (it'll fail — env vars not set yet)
+
+### 4.5 Add environment variables
+
+Railway Dashboard → your service → **Variables** tab → **Add Variable** for each:
 
 | Variable | Value | Source |
 |----------|-------|--------|
@@ -162,33 +176,35 @@ Add every variable below, set **Environment** to **Production, Preview, Developm
 | `GEMINI_FREE_API_KEY` | `AIza...` | Step 3 |
 | `GEMINI_PAID_API_KEY` | `AIza...` | Step 3 (same key for beta) |
 
-> Leave blank — stubbed for beta (do not delete the variables, just leave values empty):  
-> `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`
+Railway automatically sets `PORT` — the server reads it via `process.env.PORT`.
 
-### 4.3 Production deploy
+After adding all variables, Railway redeploys automatically.
 
-```bash
-vercel --prod
-```
+### 4.6 Get your public URL
 
-Copy your production URL — looks like `https://logiq-ai-backend.vercel.app`.
+Railway Dashboard → your service → **Settings** → **Networking** → **Generate Domain**
 
-### 4.4 Wire Supabase OAuth callback
+This gives you a URL like `https://logiq-ai-be.up.railway.app`.
+
+### 4.7 Wire Supabase OAuth callback
 
 Supabase Dashboard → **Authentication** → **URL Configuration** → **Redirect URLs** → Add:
 
 ```
-https://logiq-ai-backend.vercel.app/api/auth/callback
+https://logiq-ai-be.up.railway.app/api/auth/callback
 ```
 
-### 4.5 Verify backend
+### 4.8 Verify backend
 
 ```bash
-curl https://logiq-ai-backend.vercel.app/api/roadmap
+curl https://logiq-ai-be.up.railway.app/health
+# → {"ok":true}
+
+curl https://logiq-ai-be.up.railway.app/api/roadmap
 # → JSON array with 3 roadmaps
 ```
 
-If you get a 500, check Vercel → your project → **Functions** tab → click a failing function → view logs.
+If something fails: Railway Dashboard → your service → **Logs** tab shows full output.
 
 ---
 
@@ -207,8 +223,8 @@ Open `.env` and fill in:
 EXPO_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
 EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 
-# Backend — from Step 4.3
-EXPO_PUBLIC_API_BASE_URL=https://logiq-ai-backend.vercel.app
+# Backend — your Railway or Vercel URL from Step 4
+EXPO_PUBLIC_API_BASE_URL=https://logiq-ai-be.up.railway.app
 
 # Beta: leave blank
 EXPO_PUBLIC_STRIPE_CHECKOUT_URL=
@@ -308,22 +324,22 @@ Work through this top to bottom. Each step confirms a different part of the stac
 → Migration 002 wasn't run. Run `docs/migrations/002_courses_tokens.sql` in Supabase SQL Editor.
 
 **AI calls return 500 with "Gemini API error"**
-→ `GEMINI_FREE_API_KEY` is wrong or missing in Vercel env vars. Redeploy after adding it: `vercel --prod`.
+→ `GEMINI_FREE_API_KEY` is wrong or missing in Railway Variables. Add it and Railway will redeploy automatically.
 
 **"Invalid JWT" on authenticated requests**
 → Sign out and sign back in — the session expired.
 
 **Rate limit never resets**
-→ Upstash Redis not connected. Check `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` in Vercel env vars.
+→ Upstash Redis not connected. Check `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` in Railway Variables.
 
-**Vercel build fails with TypeScript errors**
-→ Run locally first:
+**Build fails on Railway**
+→ Check the Logs tab in Railway dashboard, or run locally first:
 ```bash
-cd backend && npm run typecheck
+cd backend && bun run typecheck
 ```
 
 **Google OAuth redirect fails**
-→ Make sure `https://logiq-ai-backend.vercel.app/api/auth/callback` is in Supabase **URL Configuration → Redirect URLs** (Step 4.4).
+→ Make sure your Railway URL `/api/auth/callback` is in Supabase **URL Configuration → Redirect URLs** (Step 4.7).
 
 **Expo Go shows "Something went wrong" on startup**
 → Check `.env` — all `EXPO_PUBLIC_*` variables must be present. Missing variables are undefined (not empty string) in Expo.
@@ -332,22 +348,24 @@ cd backend && npm run typecheck
 
 ## Local development
 
-Run backend locally (hot-reload, same behaviour as Vercel):
+Run backend locally with hot-reload:
 
 ```bash
 cd backend
-vercel dev
-# → API available at http://localhost:3000
+bun --watch index.ts
+# → Server running on http://localhost:3000
 ```
 
-For local dev, change your frontend `.env`:
+For local dev, point the frontend at your local server:
 
 ```bash
+# frontend/.env
 EXPO_PUBLIC_API_BASE_URL=http://localhost:3000
 ```
 
-> On Android emulator, use `10.0.2.2` instead of `localhost`.  
-> On a physical phone, use your machine's LAN IP (`192.168.x.x`).
+> On an Android emulator use `http://10.0.2.2:3000` instead of localhost.  
+> On a physical phone use your machine's LAN IP: `http://192.168.x.x:3000`  
+> (find it with `ipconfig` on Windows or `ifconfig` on Mac/Linux)
 
 Run frontend:
 
@@ -359,14 +377,10 @@ npx expo start
 Type-check backend:
 
 ```bash
-cd backend && npm run typecheck
+cd backend && bun run typecheck
 ```
 
-After changing env vars in Vercel dashboard, redeploy production:
-
-```bash
-cd backend && vercel --prod
-```
+Redeploy to Railway: just `git push` — Railway auto-deploys on every push to your connected branch.
 
 ---
 
