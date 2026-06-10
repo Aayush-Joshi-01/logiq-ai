@@ -15,6 +15,7 @@ import { TutorChat } from '../../components/AITutor/TutorChat'
 import { RateLimitBanner } from '../../components/Common/RateLimitBanner'
 import { ROUTES } from '../../constants/routes'
 import { COLORS } from '../../constants/theme'
+import { Feather } from '@expo/vector-icons'
 
 // ─── CodeBlock ────────────────────────────────────────────────────────────────
 function CodeBlock({ code, language }) {
@@ -203,7 +204,10 @@ export default function LessonScreen() {
           style={[styles.outlinedBtn, { borderColor: theme.accent, flex: 1 }]}
           onPress={() => setTutorOpen(true)}
         >
-          <Text style={{ color: theme.accent, fontWeight: '600', fontSize: 15 }}>Ask AI 💬</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Feather name="message-circle" size={15} color={theme.accent} />
+              <Text style={{ color: theme.accent, fontWeight: '600', fontSize: 15 }}>Ask AI</Text>
+            </View>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.filledBtn, { backgroundColor: theme.accent, flex: 1.5 }]}

@@ -10,6 +10,7 @@ import { useRoadmapStore } from '../../store/roadmapStore'
 import { useLearningStore } from '../../store/learningStore'
 import { apiPost, apiPatch } from '../../lib/api'
 import { ROUTES } from '../../constants/routes'
+import { Feather } from '@expo/vector-icons'
 import { COLORS } from '../../constants/theme'
 
 const PASS_THRESHOLD  = 0.8   // 80%
@@ -108,7 +109,12 @@ function FeynmanQuestion({ question, onSubmit, loading }) {
 function ResultScreen({ passed, score, onRetry, onContinue, theme }) {
   return (
     <View style={styles.resultContainer}>
-      <Text style={{ fontSize: 56, marginBottom: 16 }}>{passed ? '🎉' : '😅'}</Text>
+      <Feather
+        name={passed ? 'award' : 'frown'}
+        size={56}
+        color={passed ? COLORS.success : COLORS.warning}
+        style={{ marginBottom: 16 }}
+      />
       <Text style={[styles.resultTitle, { color: theme.textPrimary }]}>
         {passed ? 'Nice work!' : 'Not quite yet'}
       </Text>

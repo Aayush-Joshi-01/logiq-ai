@@ -11,16 +11,16 @@ import { apiPatch } from '../../lib/api'
 import { COLORS } from '../../constants/theme'
 
 const LANGUAGES = [
-  { code: 'en', flag: '🇺🇸', name: 'English',    native: 'English' },
-  { code: 'hi', flag: '🇮🇳', name: 'Hindi',      native: 'हिंदी' },
-  { code: 'ar', flag: '🇸🇦', name: 'Arabic',     native: 'العربية' },
-  { code: 'es', flag: '🇪🇸', name: 'Spanish',    native: 'Español' },
-  { code: 'fr', flag: '🇫🇷', name: 'French',     native: 'Français' },
-  { code: 'pt', flag: '🇧🇷', name: 'Portuguese', native: 'Português' },
-  { code: 'de', flag: '🇩🇪', name: 'German',     native: 'Deutsch' },
-  { code: 'ja', flag: '🇯🇵', name: 'Japanese',   native: '日本語' },
-  { code: 'zh', flag: '🇨🇳', name: 'Chinese',    native: '中文' },
-  { code: 'ko', flag: '🇰🇷', name: 'Korean',     native: '한국어' },
+  { code: 'en', label: 'EN', name: 'English',    native: 'English' },
+  { code: 'hi', label: 'HI', name: 'Hindi',      native: 'हिंदी' },
+  { code: 'ar', label: 'AR', name: 'Arabic',     native: 'العربية' },
+  { code: 'es', label: 'ES', name: 'Spanish',    native: 'Español' },
+  { code: 'fr', label: 'FR', name: 'French',     native: 'Français' },
+  { code: 'pt', label: 'PT', name: 'Portuguese', native: 'Português' },
+  { code: 'de', label: 'DE', name: 'German',     native: 'Deutsch' },
+  { code: 'ja', label: 'JA', name: 'Japanese',   native: '日本語' },
+  { code: 'zh', label: 'ZH', name: 'Chinese',    native: '中文' },
+  { code: 'ko', label: 'KO', name: 'Korean',     native: '한국어' },
 ]
 
 const TOTAL_STEPS = 5
@@ -153,8 +153,18 @@ export default function OnboardingScreen() {
                     alignItems: 'center',
                   }}
                 >
-                  <Text style={{ fontSize: 24 }}>{lang.flag}</Text>
-                  <Text style={{ color: theme.textPrimary, fontSize: 12, fontWeight: '600', marginTop: 4 }}>
+                  <View style={{
+                    width: 36, height: 36, borderRadius: 8,
+                    backgroundColor: selectedLanguage === lang.code ? theme.accent : theme.elevated,
+                    alignItems: 'center', justifyContent: 'center', marginBottom: 4,
+                  }}>
+                    <Text style={{
+                      fontSize: 11, fontWeight: '700',
+                      color: selectedLanguage === lang.code ? theme.accentText : theme.textMuted,
+                      letterSpacing: 0.5,
+                    }}>{lang.label}</Text>
+                  </View>
+                  <Text style={{ color: theme.textPrimary, fontSize: 12, fontWeight: '600' }}>
                     {lang.native}
                   </Text>
                   <Text style={{ color: theme.textMuted, fontSize: 10 }}>{lang.name}</Text>

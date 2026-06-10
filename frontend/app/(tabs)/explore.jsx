@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import {
   View, Text, TextInput, ScrollView, TouchableOpacity,
-  StyleSheet, FlatList, ActivityIndicator, RefreshControl, Alert,
+  StyleSheet, FlatList, ActivityIndicator, RefreshControl, Alert, Modal, KeyboardAvoidingView, Platform,
 } from 'react-native'
 import { useRouter } from 'expo-router'
+import { Feather } from '@expo/vector-icons'
 import { useTheme } from '../../hooks/useTheme'
 import { useAuthStore } from '../../store/authStore'
 import { useRoadmapStore } from '../../store/roadmapStore'
@@ -70,13 +71,17 @@ export default function ExploreScreen() {
   const [search, setSearch]             = useState('')
   const [activeCategory, setCategory]   = useState('All')
 
+  const [genVisible, setGenVisible]     = useState(false)
+  const [genTopic, setGenTopic]         = useState('')
+  const [generating, setGenerating]     = useState(false)
+
   const enrolledIds = new Set(Object.keys(roadmaps))
 
   const load = useCallback(async (silent = false) => {
     if (!silent) setLoading(true)
     try {
       const data = await apiGet('/api/roadmap')
-      setAllRoadmaps(data || [])
+      setAllRoadmaps(data?.roadmaps || [])
     } catch {
       // offline — keep existing
     } finally {
@@ -110,6 +115,26 @@ export default function ExploreScreen() {
     return list
   }, [allRoadmaps, search, activeCategory])
 
+  async function handleGenerate() {
+    if (!user) {
+      Alert.alert('Sign in required', 'Create a free account to generate personalised roadmaps.')
+      return
+    }
+    if (!genTopic.trim()) return
+    setGenerating(true)
+    try {
+      const { roadmapId } = await apiPost('/api/ai/roadmap', { topic: genTopic.trim() })
+      setGenVisible(false)
+      setGenTopic('')
+      load(true) // refresh list so new roadmap appears
+      router.push(ROUTES.ROADMAP(roadmapId))
+    } catch (err) {
+      Alert.alert('Generation failed', err?.message || 'Please try again.')
+    } finally {
+      setGenerating(false)
+    }
+  }
+
   async function handleEnroll(roadmap) {
     if (!user) {
       Alert.alert('Sign in required', 'Create a free account to track your progress.')
@@ -135,7 +160,7 @@ export default function ExploreScreen() {
       {/* Search bar */}
       <View style={[styles.searchContainer, { backgroundColor: theme.background, borderBottomColor: theme.border }]}>
         <View style={[styles.searchBar, { backgroundColor: theme.elevated, borderColor: theme.border }]}>
-          <Text style={{ color: theme.textMuted, fontSize: 16, marginRight: 8 }}>🔍</Text>
+          <Feather name="search" size={16} color={theme.textMuted} style={{ marginRight: 8 }} />
           <TextInput
             style={[styles.searchInput, { color: theme.textPrimary }]}
             placeholder="Search roadmaps…"
@@ -182,6 +207,43 @@ export default function ExploreScreen() {
         ))}
       </ScrollView>
 
+      {/* Generate roadmap modal */}
+      <Modal visible={genVisible} transparent animationType="slide" onRequestClose={() => setGenVisible(false)}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+          <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setGenVisible(false)} />
+          <View style={[styles.modalSheet, { backgroundColor: theme.surface, borderTopColor: theme.border }]}>
+            <View style={[styles.modalHandle, { backgroundColor: theme.border }]} />
+            <Text style={[styles.modalTitle, { color: theme.textPrimary }]}>Generate a Roadmap</Text>
+            <Text style={[styles.modalSubtitle, { color: theme.textSecondary }]}>
+              Describe what you want to learn — AI will build a personalised path for you.
+            </Text>
+            <TextInput
+              style={[styles.modalInput, { backgroundColor: theme.elevated, borderColor: theme.border, color: theme.textPrimary }]}
+              placeholder="e.g. Learn Rust, Personal finance, Public speaking…"
+              placeholderTextColor={theme.textMuted}
+              value={genTopic}
+              onChangeText={setGenTopic}
+              autoFocus
+              returnKeyType="done"
+              onSubmitEditing={handleGenerate}
+            />
+            <TouchableOpacity
+              style={[styles.modalBtn, { backgroundColor: theme.accent, opacity: (!genTopic.trim() || generating) ? 0.6 : 1 }]}
+              onPress={handleGenerate}
+              disabled={!genTopic.trim() || generating}
+            >
+              {generating
+                ? <ActivityIndicator color={theme.accentText} />
+                : <Text style={{ color: theme.accentText, fontWeight: '700', fontSize: 16 }}>Generate Roadmap</Text>
+              }
+            </TouchableOpacity>
+            {generating && (
+              <Text style={[styles.modalHint, { color: theme.textMuted }]}>Building your roadmap… ~10s</Text>
+            )}
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
+
       {/* Roadmap grid */}
       {loading ? (
         <ScrollView contentContainerStyle={styles.grid}>
@@ -191,11 +253,17 @@ export default function ExploreScreen() {
         </ScrollView>
       ) : filtered.length === 0 ? (
         <View style={styles.emptyState}>
-          <Text style={{ fontSize: 40, marginBottom: 12 }}>🗺️</Text>
+          <Feather name="map" size={40} color={theme.textMuted} style={{ marginBottom: 12 }} />
           <Text style={[styles.emptyTitle, { color: theme.textPrimary }]}>No roadmaps found</Text>
           <Text style={[styles.emptyDesc, { color: theme.textSecondary }]}>
-            {search ? 'Try a different search term' : 'Check back soon for new content'}
+            {search ? 'Try a different search term or generate one below' : 'Generate a personalised roadmap with AI'}
           </Text>
+          <TouchableOpacity
+            style={[styles.genBtnLarge, { backgroundColor: theme.accent, marginTop: 20 }]}
+            onPress={() => setGenVisible(true)}
+          >
+            <Text style={{ color: theme.accentText, fontWeight: '700', fontSize: 15 }}>Generate with AI</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         <FlatList
@@ -206,6 +274,20 @@ export default function ExploreScreen() {
           contentContainerStyle={styles.grid}
           showsVerticalScrollIndicator={false}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.accent} />}
+          ListHeaderComponent={
+            <TouchableOpacity
+              style={[styles.genBanner, { backgroundColor: theme.elevated, borderColor: theme.border }]}
+              onPress={() => setGenVisible(true)}
+              activeOpacity={0.8}
+            >
+              <Feather name="zap" size={20} color={theme.accent} />
+              <View style={{ flex: 1, marginLeft: 12 }}>
+                <Text style={{ color: theme.textPrimary, fontWeight: '700', fontSize: 14 }}>Generate a Roadmap</Text>
+                <Text style={{ color: theme.textSecondary, fontSize: 12, marginTop: 2 }}>AI builds a personalised learning path for any topic</Text>
+              </View>
+              <Text style={{ color: theme.accent, fontSize: 18 }}>→</Text>
+            </TouchableOpacity>
+          }
           renderItem={({ item }) => (
             <View style={{ flex: 1 }}>
               {enrolling === item.id ? (
@@ -249,4 +331,15 @@ const styles = StyleSheet.create({
   emptyState:      { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 40 },
   emptyTitle:      { fontSize: 18, fontWeight: '700', marginBottom: 8 },
   emptyDesc:       { fontSize: 14, textAlign: 'center' },
+  genBanner:       { flexDirection: 'row', alignItems: 'center', borderRadius: 14, borderWidth: 1, padding: 14, marginBottom: 16 },
+  genBtnLarge:     { borderRadius: 12, paddingVertical: 14, paddingHorizontal: 28 },
+  // modal
+  modalBackdrop:   { flex: 1 },
+  modalSheet:      { borderTopLeftRadius: 24, borderTopRightRadius: 24, borderTopWidth: 1, padding: 24, paddingBottom: 40 },
+  modalHandle:     { width: 40, height: 4, borderRadius: 2, alignSelf: 'center', marginBottom: 20 },
+  modalTitle:      { fontSize: 20, fontWeight: '700', marginBottom: 6 },
+  modalSubtitle:   { fontSize: 14, lineHeight: 20, marginBottom: 20 },
+  modalInput:      { borderRadius: 12, borderWidth: 1, padding: 14, fontSize: 15, marginBottom: 16 },
+  modalBtn:        { borderRadius: 12, padding: 16, alignItems: 'center', marginBottom: 12 },
+  modalHint:       { fontSize: 13, textAlign: 'center' },
 })

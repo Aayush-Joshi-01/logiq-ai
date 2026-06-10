@@ -18,6 +18,7 @@ import { GraphCanvas } from '../../components/RoadmapGraph/GraphCanvas'
 import { useGraphLayout } from '../../components/RoadmapGraph/useGraphLayout'
 import { TutorChat } from '../../components/AITutor/TutorChat'
 import { ROUTES } from '../../constants/routes'
+import { Feather } from '@expo/vector-icons'
 
 const NODE_TYPE_LABEL = { concept: 'Concept', project: 'Project', assessment: 'Quiz', milestone: 'Milestone' }
 
@@ -144,7 +145,7 @@ export default function RoadmapScreen() {
         onPress={() => setTutorOpen(true)}
         activeOpacity={0.85}
       >
-        <Text style={{ color: theme.accentText, fontSize: 22 }}>💬</Text>
+        <Feather name="message-circle" size={22} color={theme.accentText} />
       </TouchableOpacity>
 
       {/* Node bottom sheet */}
@@ -158,12 +159,20 @@ export default function RoadmapScreen() {
                 {selectedNode.estimated_minutes ? `  ·  ~${selectedNode.estimated_minutes} min` : ''}
               </Text>
               <Text style={[styles.sheetTitle, { color: theme.textPrimary }]}>{selectedNode.title}</Text>
-              <Text style={[styles.sheetStatus, { color: theme.textSecondary }]}>
-                {selectedNode.status === 'completed'   ? '✓ Completed'
-                  : selectedNode.status === 'in_progress' ? '▶ In Progress'
-                  : selectedNode.status === 'available'   ? 'Ready to start'
-                  : '🔒 Locked'}
-              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                {selectedNode.status === 'locked' && (
+                  <Feather name="lock" size={13} color={theme.textMuted} />
+                )}
+                {selectedNode.status === 'completed' && (
+                  <Feather name="check-circle" size={13} color={theme.accent} />
+                )}
+                <Text style={[styles.sheetStatus, { color: selectedNode.status === 'locked' ? theme.textMuted : theme.textSecondary }]}>
+                  {selectedNode.status === 'completed'      ? 'Completed'
+                    : selectedNode.status === 'in_progress' ? 'In Progress'
+                    : selectedNode.status === 'available'   ? 'Ready to start'
+                    : 'Locked'}
+                </Text>
+              </View>
 
               {(selectedNode.status === 'available' || selectedNode.status === 'in_progress') && (
                 <TouchableOpacity

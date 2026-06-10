@@ -1,5 +1,6 @@
 {
   "expo": {
+    "sdkVersion": "54.0.0",
     "name": "Learnly AI",
     "slug": "logiq-ai",
     "scheme": "logiqai",

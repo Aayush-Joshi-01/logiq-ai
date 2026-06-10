@@ -16,6 +16,7 @@ import { LoadingSkeleton } from '../../components/Common/LoadingSkeleton'
 import { OfflineBanner } from '../../components/Common/OfflineBanner'
 import { ROUTES } from '../../constants/routes'
 import { COLORS } from '../../constants/theme'
+import { Feather, Ionicons } from '@expo/vector-icons'
 
 // ─── Streak + XP Card ─────────────────────────────────────────────────────────
 function StreakCard({ streak, theme }) {
@@ -27,12 +28,18 @@ function StreakCard({ streak, theme }) {
       <View style={styles.streakRow}>
         <View style={styles.streakStat}>
           <Text style={[styles.streakNumber, { color: COLORS.warning }]}>{current}</Text>
-          <Text style={[styles.streakLabel, { color: theme.textSecondary }]}>day streak 🔥</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <Ionicons name="flame-outline" size={13} color={COLORS.warning} />
+              <Text style={[styles.streakLabel, { color: theme.textSecondary }]}>day streak</Text>
+            </View>
         </View>
         <View style={[styles.streakDivider, { backgroundColor: theme.border }]} />
         <View style={styles.streakStat}>
           <Text style={[styles.streakNumber, { color: theme.accent }]}>{xp.toLocaleString()}</Text>
-          <Text style={[styles.streakLabel, { color: theme.textSecondary }]}>total XP ⚡</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <Feather name="zap" size={13} color={theme.accent} />
+              <Text style={[styles.streakLabel, { color: theme.textSecondary }]}>total XP</Text>
+            </View>
         </View>
       </View>
       {current > 0 && (
@@ -235,7 +242,7 @@ export default function HomeScreen() {
           ) : (
             <View style={[styles.emptyState, { borderColor: theme.border }]}>
               <Text style={{ color: theme.textMuted, textAlign: 'center' }}>
-                You've explored all available roadmaps 🎉
+                You've explored all available roadmaps
               </Text>
             </View>
           )}
@@ -252,7 +259,7 @@ export default function HomeScreen() {
               onPress={() => router.push(ROUTES.COURSE_NEW)}
               activeOpacity={0.8}
             >
-              <Text style={{ fontSize: 32, marginBottom: 10 }}>✨</Text>
+              <Feather name="zap" size={32} color={theme.accent} style={{ marginBottom: 10 }} />
               <Text style={[styles.learnAnythingTitle, { color: theme.textPrimary }]}>
                 AI Personalized Course
               </Text>

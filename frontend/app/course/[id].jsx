@@ -8,6 +8,7 @@ import { useTheme } from '../../hooks/useTheme'
 import { useCourseStore } from '../../store/courseStore'
 import { apiGet, apiDelete } from '../../lib/api'
 import { ROUTES } from '../../constants/routes'
+import { Feather } from '@expo/vector-icons'
 import { COLORS } from '../../constants/theme'
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -144,7 +145,12 @@ export default function CourseScreen() {
             <Text style={[styles.progressLabel, { color: theme.textSecondary }]}>
               {done}/{total} sections read · {pct}%
             </Text>
-            {pct === 100 && <Text style={[styles.completedBadge, { color: COLORS.success }]}>Complete 🏆</Text>}
+            {pct === 100 && (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                  <Feather name="award" size={14} color={COLORS.success} />
+                  <Text style={[styles.completedBadge, { color: COLORS.success }]}>Complete</Text>
+                </View>
+              )}
           </View>
           <View style={[styles.progressTrack, { backgroundColor: theme.elevated }]}>
             <View style={[styles.progressFill, { width: `${pct}%`, backgroundColor: pct === 100 ? COLORS.success : theme.accent }]} />

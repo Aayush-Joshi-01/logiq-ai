@@ -9,6 +9,7 @@ import { useCourseStore } from '../../../../store/courseStore'
 import { apiPost } from '../../../../lib/api'
 import { ROUTES } from '../../../../constants/routes'
 import { COLORS } from '../../../../constants/theme'
+import { Feather } from '@expo/vector-icons'
 
 // ─── Content blocks ───────────────────────────────────────────────────────────
 function OverviewBlock({ text, theme }) {
@@ -52,7 +53,7 @@ function ExampleBlock({ example, theme }) {
 function TakeawayBlock({ text, theme }) {
   return (
     <View style={[styles.takeaway, { backgroundColor: theme.accent + '15', borderColor: theme.accent }]}>
-      <Text style={{ fontSize: 18, marginBottom: 6 }}>💡</Text>
+      <Feather name="sun" size={18} color={theme.accent} style={{ marginBottom: 6 }} />
       <Text style={[styles.takeawayText, { color: theme.textPrimary }]}>{text}</Text>
     </View>
   )
@@ -105,7 +106,12 @@ function QuizSection({ sectionId, onComplete, theme }) {
     const pct = Math.round((score / (questions.length - 1)) * 100)
     return (
       <View style={[styles.quizResult, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-        <Text style={{ fontSize: 32, marginBottom: 8 }}>{pct >= 80 ? '🎉' : '📚'}</Text>
+        <Feather
+          name={pct >= 80 ? 'award' : 'book-open'}
+          size={32}
+          color={pct >= 80 ? COLORS.success : COLORS.warning}
+          style={{ marginBottom: 8 }}
+        />
         <Text style={[styles.quizResultScore, { color: pct >= 80 ? COLORS.success : COLORS.warning }]}>
           {pct >= 80 ? 'Great job!' : 'Keep practicing'}
         </Text>

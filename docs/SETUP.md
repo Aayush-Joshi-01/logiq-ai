@@ -57,10 +57,11 @@ Run each file below in a **new query tab** — paste the contents, click **Run**
 **Run in this exact order:**
 
 ```
-1. docs/schema.sql              ← 11 core tables + triggers
-2. docs/rls-policies.sql        ← Row-level security policies
-3. docs/seed.sql                ← 3 starter roadmaps
-4. docs/migrations/002_courses_tokens.sql  ← Courses, token tracking, profile fields
+1. docs/schema.sql                          ← core tables + triggers
+2. docs/rls-policies.sql                    ← Row-level security policies
+3. docs/seed.sql                            ← 3 starter roadmaps
+4. docs/migrations/002_courses_tokens.sql   ← Courses, token tracking, profile fields
+5. docs/migrations/003_roadmap_generated.sql ← AI-generated roadmaps (created_by column + RLS)
 ```
 
 > What migration 002 adds:

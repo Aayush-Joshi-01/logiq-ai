@@ -2,13 +2,14 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 
 // ── AI ────────────────────────────────────────────────────────────────────────
-import streamHandler       from './handlers/ai/stream'
-import outlineHandler      from './handlers/ai/outline'
-import contentHandler      from './handlers/ai/content'
-import explainHandler      from './handlers/ai/explain'
-import quizHandler         from './handlers/ai/quiz'
-import feynmanHandler      from './handlers/ai/feynman'
-import quizSectionHandler  from './handlers/ai/quiz/section'
+import streamHandler        from './handlers/ai/stream'
+import outlineHandler       from './handlers/ai/outline'
+import contentHandler       from './handlers/ai/content'
+import explainHandler       from './handlers/ai/explain'
+import quizHandler          from './handlers/ai/quiz'
+import feynmanHandler       from './handlers/ai/feynman'
+import quizSectionHandler   from './handlers/ai/quiz/section'
+import roadmapGenHandler    from './handlers/ai/roadmap'
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 import authCallbackHandler from './handlers/auth/callback'
@@ -60,6 +61,7 @@ app.all('/api/ai/explain',       (c) => explainHandler(c.req.raw))
 app.all('/api/ai/quiz',          (c) => quizHandler(c.req.raw))
 app.all('/api/ai/feynman',       (c) => feynmanHandler(c.req.raw))
 app.all('/api/ai/quiz/section',  (c) => quizSectionHandler(c.req.raw))
+app.all('/api/ai/roadmap',       (c) => roadmapGenHandler(c.req.raw))
 
 // ── Auth routes ───────────────────────────────────────────────────────────────
 app.all('/api/auth/callback', (c) => authCallbackHandler(c.req.raw))

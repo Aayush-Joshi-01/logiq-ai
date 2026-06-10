@@ -13,6 +13,7 @@ import { apiGet } from '../../lib/api'
 import { LoadingSkeleton } from '../../components/Common/LoadingSkeleton'
 import { OfflineBanner } from '../../components/Common/OfflineBanner'
 import { ROUTES } from '../../constants/routes'
+import { Feather } from '@expo/vector-icons'
 import { COLORS } from '../../constants/theme'
 
 // ─── Shared Progress Bar ──────────────────────────────────────────────────────
@@ -228,7 +229,7 @@ export default function MyLearningScreen() {
           <>
             {activeRoadmaps.length === 0 && completedRoadmaps.length === 0 ? (
               <View style={styles.emptyState}>
-                <Text style={{ fontSize: 40, marginBottom: 12 }}>🗺️</Text>
+                <Feather name="map" size={40} color={theme.textMuted} style={{ marginBottom: 12 }} />
                 <Text style={[styles.emptyTitle, { color: theme.textPrimary }]}>No roadmaps yet</Text>
                 <TouchableOpacity style={[styles.ctaBtn, { backgroundColor: theme.accent }]} onPress={() => router.push(ROUTES.EXPLORE)}>
                   <Text style={{ color: theme.accentText, fontWeight: 'bold' }}>Browse Roadmaps</Text>
@@ -246,7 +247,10 @@ export default function MyLearningScreen() {
                 )}
                 {completedRoadmaps.length > 0 && (
                   <>
-                    <Text style={[styles.sectionTitle, { color: theme.textPrimary, marginTop: 20 }]}>Completed 🏆</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 20, marginBottom: 4 }}>
+                      <Feather name="award" size={14} color={theme.textPrimary} />
+                      <Text style={[styles.sectionTitle, { color: theme.textPrimary, marginTop: 0 }]}>Completed</Text>
+                    </View>
                     {completedRoadmaps.map((r) => (
                       <RoadmapRow key={r.id} roadmap={r} onPress={(id) => router.push(ROUTES.ROADMAP(id))} theme={theme} />
                     ))}
@@ -269,7 +273,7 @@ export default function MyLearningScreen() {
 
             {allCourses.length === 0 ? (
               <View style={styles.emptyState}>
-                <Text style={{ fontSize: 40, marginBottom: 12 }}>📖</Text>
+                <Feather name="book-open" size={40} color={theme.textMuted} style={{ marginBottom: 12 }} />
                 <Text style={[styles.emptyTitle, { color: theme.textPrimary }]}>No courses yet</Text>
                 <Text style={[styles.emptyDesc, { color: theme.textSecondary }]}>
                   Type any topic and get a personalized 5-minute course with AI
@@ -287,7 +291,10 @@ export default function MyLearningScreen() {
                 )}
                 {completedCourses.length > 0 && (
                   <>
-                    <Text style={[styles.sectionTitle, { color: theme.textPrimary, marginTop: 20 }]}>Completed 🏆</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 20, marginBottom: 4 }}>
+                      <Feather name="award" size={14} color={theme.textPrimary} />
+                      <Text style={[styles.sectionTitle, { color: theme.textPrimary, marginTop: 0 }]}>Completed</Text>
+                    </View>
                     {completedCourses.map((c) => (
                       <CourseRow key={c.id} course={c} onPress={(id) => router.push(ROUTES.COURSE(id))} theme={theme} />
                     ))}
