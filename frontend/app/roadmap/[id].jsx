@@ -3,6 +3,7 @@ import {
   View, Text, StyleSheet, TouchableOpacity, ActivityIndicator,
   Modal, Pressable, ActionSheetIOS, Platform, Alert,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import Animated, {
   useSharedValue,
@@ -26,6 +27,8 @@ export default function RoadmapScreen() {
   const { id } = useLocalSearchParams()
   const router  = useRouter()
   const theme   = useTheme()
+
+  const insets = useSafeAreaInsets()
 
   const { roadmaps, setRoadmap, setCurrentRoadmap, updateNodeStatus } = useRoadmapStore()
   const { setCurrentRoadmapId, setCurrentNodeId } = useLearningStore()
@@ -53,8 +56,8 @@ export default function RoadmapScreen() {
     setError(null)
     try {
       const data = await apiGet(`/api/roadmap/${id}`)
-      setRoadmap(id, data)
-      setCurrentRoadmap(data)
+      setRoadmap(id, data.roadmap)
+      setCurrentRoadmap(data.roadmap)
       setCurrentRoadmapId(id)
     } catch (err) {
       setError(err.message)
@@ -130,6 +133,15 @@ export default function RoadmapScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
+      {/* Back button — safe area aware */}
+      <TouchableOpacity
+        style={[styles.backBtn, { top: insets.top + 8 }]}
+        onPress={() => router.back()}
+        hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+      >
+        <Feather name="arrow-left" size={22} color={theme.textPrimary} />
+      </TouchableOpacity>
+
       <GraphCanvas
         layoutNodes={layoutNodes}
         layoutEdges={layoutEdges}
@@ -213,6 +225,12 @@ export default function RoadmapScreen() {
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   btn:    { borderWidth: 1, paddingHorizontal: 24, paddingVertical: 10, borderRadius: 8 },
+  backBtn: {
+    position: 'absolute', left: 16, zIndex: 10,
+    width: 40, height: 40, borderRadius: 20,
+    alignItems: 'center', justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.35)',
+  },
   fab: {
     position: 'absolute', bottom: 32, right: 24,
     width: 56, height: 56, borderRadius: 28,

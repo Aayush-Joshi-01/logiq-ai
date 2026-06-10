@@ -9,7 +9,7 @@ export function useAIStream() {
   const { aiProvider } = useSettingsStore()
 
   async function sendMessage({ messages, nodeId, roadmapContext, onToken, onDone, onError }) {
-    const byokKey = await getBYOKKey(aiProvider !== 'platform' ? aiProvider : null)
+    const byokKey = aiProvider !== 'platform' ? await getBYOKKey(aiProvider) : null
 
     let response
     try {

@@ -2,8 +2,6 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import * as Localization from 'expo-localization'
 import { I18nManager } from 'react-native'
-import * as Updates from 'expo-updates'
-
 const RTL_LANGUAGES = ['ar', 'he', 'ur', 'fa']
 
 export function initI18n(savedLanguage) {
@@ -14,6 +12,7 @@ export function initI18n(savedLanguage) {
   I18nManager.forceRTL(isRTL)
 
   i18n.use(initReactI18next).init({
+    compatibilityJSON: 'v3',
     resources: {
       en: {
         common:      require('../locales/en/common.json'),
@@ -48,7 +47,7 @@ export async function changeLanguage(lang) {
   const isRTL = RTL_LANGUAGES.includes(lang)
   if (I18nManager.isRTL !== isRTL) {
     I18nManager.forceRTL(isRTL)
-    await Updates.reloadAsync()
+    // RTL reload requires an EAS dev build — not available in Expo Go
   }
 }
 

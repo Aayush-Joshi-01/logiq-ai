@@ -72,14 +72,21 @@ export default function OnboardingScreen() {
   async function handleEmailSignup() {
     setLoading(true)
     setError(null)
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({ email, password })
     if (error) {
       setError(error.message)
       setLoading(false)
       return
     }
     await saveOnboardingData()
-    router.replace('/(tabs)')
+    if (data.session) {
+      // Email confirmation disabled — session ready immediately
+      router.replace('/(tabs)')
+    } else {
+      // Email confirmation enabled — tell user to check inbox
+      setError('Check your email and click the confirmation link to continue.')
+      setLoading(false)
+    }
   }
 
   async function saveOnboardingData() {
@@ -368,6 +375,10 @@ export default function OnboardingScreen() {
 
             <TouchableOpacity onPress={handleSkip} style={{ alignItems: 'center', padding: 12 }}>
               <Text style={{ color: theme.textMuted, fontSize: 15 }}>{t('step5.skipCTA')}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => router.push('/(auth)/login')} style={{ alignItems: 'center', padding: 12 }}>
+              <Text style={{ color: theme.accent, fontSize: 15 }}>Already have an account? Sign in</Text>
             </TouchableOpacity>
           </View>
         )}

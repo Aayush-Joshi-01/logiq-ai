@@ -3,6 +3,7 @@ import {
   View, Text, ScrollView, TouchableOpacity,
   StyleSheet, RefreshControl, ActivityIndicator,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { useTheme } from '../../hooks/useTheme'
 import { useAuthStore } from '../../store/authStore'
@@ -120,6 +121,7 @@ function TabBar({ active, onChange, theme }) {
 export default function MyLearningScreen() {
   const theme  = useTheme()
   const router = useRouter()
+  const insets = useSafeAreaInsets()
 
   const { roadmaps, setRoadmap } = useRoadmapStore()
   const { streak }               = useLearningStore()
@@ -158,7 +160,7 @@ export default function MyLearningScreen() {
         ...Object.keys(roadmaps).map(async (id) => {
           try {
             const data = await apiGet(`/api/roadmap/${id}`)
-            setRoadmap(id, data)
+            setRoadmap(id, data.roadmap)
           } catch { /* offline */ }
         }),
         // Fetch courses
@@ -192,7 +194,7 @@ export default function MyLearningScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.background }}>
+    <View style={{ flex: 1, backgroundColor: theme.background, paddingTop: insets.top }}>
       <OfflineBanner />
 
       {/* Stats row */}

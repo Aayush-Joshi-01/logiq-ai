@@ -3,6 +3,7 @@ import {
   View, Text, TextInput, ScrollView, TouchableOpacity,
   StyleSheet, FlatList, ActivityIndicator, RefreshControl, Alert, Modal, KeyboardAvoidingView, Platform,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { Feather } from '@expo/vector-icons'
 import { useTheme } from '../../hooks/useTheme'
@@ -60,6 +61,7 @@ function RoadmapGridCard({ roadmap, isEnrolled, onEnroll, onView, theme }) {
 export default function ExploreScreen() {
   const theme  = useTheme()
   const router = useRouter()
+  const insets = useSafeAreaInsets()
 
   const { user }     = useAuthStore()
   const { roadmaps } = useRoadmapStore()
@@ -158,7 +160,7 @@ export default function ExploreScreen() {
       <OfflineBanner />
 
       {/* Search bar */}
-      <View style={[styles.searchContainer, { backgroundColor: theme.background, borderBottomColor: theme.border }]}>
+      <View style={[styles.searchContainer, { backgroundColor: theme.background, borderBottomColor: theme.border, paddingTop: insets.top + 8 }]}>
         <View style={[styles.searchBar, { backgroundColor: theme.elevated, borderColor: theme.border }]}>
           <Feather name="search" size={16} color={theme.textMuted} style={{ marginRight: 8 }} />
           <TextInput

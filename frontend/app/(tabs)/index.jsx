@@ -3,6 +3,7 @@ import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
   FlatList, RefreshControl, ActivityIndicator,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '../../hooks/useTheme'
@@ -130,6 +131,7 @@ export default function HomeScreen() {
   const { t }      = useTranslation('common')
   const theme      = useTheme()
   const router     = useRouter()
+  const insets     = useSafeAreaInsets()
 
   const { profile }  = useAuthStore()
   const { streak }   = useLearningStore()
@@ -156,7 +158,7 @@ export default function HomeScreen() {
     if (!silent) setLoading(true)
     try {
       const data = await apiGet('/api/roadmap')
-      setAllRoadmaps(data || [])
+      setAllRoadmaps(data?.roadmaps || [])
     } catch {
       // Offline — keep whatever is in store
     } finally {
@@ -179,6 +181,7 @@ export default function HomeScreen() {
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: theme.background }}
+      contentContainerStyle={{ paddingTop: insets.top }}
       showsVerticalScrollIndicator={false}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.accent} />}
     >

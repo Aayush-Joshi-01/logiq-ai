@@ -29,7 +29,7 @@ export const useSettingsStore = create(
       setDifficultyPref:    (difficultyPreference) => set({ difficultyPreference }),
     }),
     {
-      name: 'learnly-settings',
+      name: 'logiq-settings',
       storage: createJSONStorage(() => AsyncStorage),
       // byokKey is always excluded — it must never be persisted via Zustand
       partialize: (state) => {

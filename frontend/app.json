@@ -1,7 +1,7 @@
 {
   "expo": {
     "sdkVersion": "54.0.0",
-    "name": "Learnly AI",
+    "name": "Logiq AI",
     "slug": "logiq-ai",
     "scheme": "logiqai",
     "version": "1.0.0",
@@ -34,7 +34,9 @@
           "icon": "./assets/images/notification-icon.png",
           "color": "#748CAB"
         }
-      ]
+      ],
+      "expo-localization",
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true

@@ -10,8 +10,8 @@ export const AI_PROVIDERS = {
 
 // Secure store keys for BYOK (one per provider)
 export const BYOK_STORE_KEYS = {
-  openai: 'learnly_byok_openai',
-  gemini: 'learnly_byok_gemini',
-  claude: 'learnly_byok_claude',
-  azure:  'learnly_byok_azure',
+  openai: 'logiq_byok_openai',
+  gemini: 'logiq_byok_gemini',
+  claude: 'logiq_byok_claude',
+  azure:  'logiq_byok_azure',
 }

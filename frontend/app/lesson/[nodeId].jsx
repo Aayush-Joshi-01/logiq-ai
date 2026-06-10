@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import {
   View, Text, ScrollView, TouchableOpacity, Pressable,
-  StyleSheet, ActivityIndicator, Modal, SafeAreaView,
+  StyleSheet, ActivityIndicator, Modal,
   Clipboard, Platform,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import * as Haptics from 'expo-haptics'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useTheme } from '../../hooks/useTheme'
@@ -113,6 +114,8 @@ export default function LessonScreen() {
   const router      = useRouter()
   const theme       = useTheme()
 
+  const insets = useSafeAreaInsets()
+
   const { currentRoadmap } = useRoadmapStore()
   const { currentRoadmapId } = useLearningStore()
 
@@ -138,9 +141,15 @@ export default function LessonScreen() {
         nodeTitle: node?.title,
         nodeType:  node?.type,
       })
-      setExplanation(data)
+      // API returns { content: { coreConcept, codeExample, tryIt, goDeeper }, cached }
+      const c = data.content || data
+      const blocks = []
+      if (c.coreConcept)  blocks.push({ type: 'core_concept', content: c.coreConcept })
+      if (c.codeExample)  blocks.push({ type: 'code_example', content: c.codeExample.code, language: c.codeExample.language, caption: c.codeExample.explanation })
+      if (c.tryIt)        blocks.push({ type: 'try_it', content: c.tryIt })
+      if (c.goDeeper)     blocks.push({ type: 'go_deeper', content: c.goDeeper })
+      setExplanation({ blocks })
     } catch {
-      // Show placeholder content on failure
       setExplanation({ blocks: [] })
     } finally {
       setLoading(false)
@@ -152,7 +161,7 @@ export default function LessonScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={[styles.container, { backgroundColor: theme.background, paddingTop: insets.top }]}>
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: theme.border }]}>
         <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
@@ -226,7 +235,7 @@ export default function LessonScreen() {
           onClose={() => setTutorOpen(false)}
         />
       </Modal>
-    </SafeAreaView>
+    </View>
   )
 }
 

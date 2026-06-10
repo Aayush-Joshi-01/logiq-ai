@@ -4,7 +4,7 @@ let db = null
 
 function getDB() {
   if (!db) {
-    db = SQLite.openDatabaseSync('learnly_cache.db')
+    db = SQLite.openDatabaseSync('logiq_cache.db')
     initDB()
   }
   return db

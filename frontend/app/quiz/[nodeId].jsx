@@ -2,8 +2,9 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   View, Text, ScrollView, TouchableOpacity,
   TextInput, StyleSheet, ActivityIndicator,
-  SafeAreaView, Animated,
+  Animated,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useTheme } from '../../hooks/useTheme'
 import { useRoadmapStore } from '../../store/roadmapStore'
@@ -142,6 +143,7 @@ export default function QuizScreen() {
   const { nodeId }  = useLocalSearchParams()
   const router      = useRouter()
   const theme       = useTheme()
+  const insets      = useSafeAreaInsets()
 
   const { currentRoadmap, updateNodeStatus } = useRoadmapStore()
   const { currentRoadmapId } = useLearningStore()
@@ -264,7 +266,7 @@ export default function QuizScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={[styles.container, { backgroundColor: theme.background, paddingTop: insets.top }]}>
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: theme.border }]}>
         <TouchableOpacity onPress={() => router.back()} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
@@ -315,7 +317,7 @@ export default function QuizScreen() {
           </View>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   )
 }
 

@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react'
 import {
   View, Text, ScrollView, TouchableOpacity, TextInput,
-  StyleSheet, Switch, Alert, ActivityIndicator, SafeAreaView,
+  StyleSheet, Switch, Alert, ActivityIndicator,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { useTheme } from '../../hooks/useTheme'
 import { useAuthStore } from '../../store/authStore'
@@ -246,6 +247,7 @@ function AboutYouSection({ profile, theme, onSaved }) {
 export default function ProfileScreen() {
   const theme  = useTheme()
   const router = useRouter()
+  const insets = useSafeAreaInsets()
 
   const { user, profile, clearAuth, setProfile } = useAuthStore()
   const { language, theme: themePref, setTheme, setLanguage, dailyCallsUsed, dailyCallsLimit } = useSettingsStore()
@@ -313,7 +315,7 @@ export default function ProfileScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={[styles.container, { backgroundColor: theme.background, paddingTop: insets.top }]}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
 
         {/* Avatar + identity */}
@@ -459,7 +461,7 @@ export default function ProfileScreen() {
 
         <Text style={[styles.version, { color: theme.textMuted }]}>logiq-ai · Beta</Text>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   )
 }
 

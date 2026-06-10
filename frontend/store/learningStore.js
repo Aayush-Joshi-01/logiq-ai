@@ -38,7 +38,7 @@ export const useLearningStore = create(
       }),
     }),
     {
-      name: 'learnly-learning',
+      name: 'logiq-learning',
       storage: createJSONStorage(() => AsyncStorage),
     }
   )
